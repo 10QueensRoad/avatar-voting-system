@@ -1,0 +1,13 @@
+<polymer-element>
+  <template>
+    <core-ajax url="http://mrvote.herokuapp.com/suggestions" on-core-response="{{suggestionsLoaded}}" handleAs="json">
+    </core-ajax>
+  </template>
+  <script>
+    Polymer('suggestion-service', {
+    suggestionsLoaded: function () {
+    this.suggestions = this.$.ajax.response.slice(0);
+    }
+    }
+  </script>
+</polymer-element>
