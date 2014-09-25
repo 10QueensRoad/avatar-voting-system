@@ -1,0 +1,20 @@
+{
+  "name": "avatar-voting-system",
+  "version": "0.0.0",
+  "homepage": "https://github.com/10QueensRoad/avatar-voting-system",
+  "authors": [
+    "Bernie Schelberg <b.schelberg@gmail.com>"
+  ],
+  "license": "GPL",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.4.1",
+    "core-elements": "Polymer/core-elements#~0.4.1"
+  }
+}
