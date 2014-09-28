@@ -1,13 +1,17 @@
-<link rel="import" href="components/bower_components/polymer/polymer.js">
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="suggestion-service.html">
+
 <polymer-element name="suggestion-list">
   <template>
+    <suggestion-service id="service" suggestions="{{suggestions}}">
+    </suggestion-service>
     <ul>
-      <template repeat="{{suggestion in ['Sugg1', 'Sugg2']}}">
-	<li>{{suggestion}}</li>
+      <template repeat="{{suggestion in suggestions}}">
+        <li>{{suggestion.name}}</li>
       </template>
     </ul>
   </template>
   <script>
-    Polymer({});
+  Polymer({});
   </script>
 </polymer-element>
