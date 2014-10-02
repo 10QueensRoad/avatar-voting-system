@@ -1,0 +1,25 @@
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+
+<polymer-element name="signup-page" attributes="pathArg1 queryParam1" noscript>
+  <template>
+    <style>
+      paper-input {
+        width: 32em;
+      }
+    </style>
+    <div horizontal center-justified layout>
+      <div vertical layout>
+        <paper-input floatingLabel label="Please enter your email address" type="email" error="Input is not an email!"></paper-input>
+        <paper-button raisedButton label="Send me a login!" on-tap="{{sendEmailAddress}}"></paper-button>
+      </div>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      sendEmailAddress: function () {
+        console.log("TODO: Send email address to server");
+      }
+    });
+  </script>
+</polymer-element>

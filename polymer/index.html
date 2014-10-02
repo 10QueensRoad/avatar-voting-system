@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script type="text/javascript" src="bower_components/platform/platform.js"></script>
-    <link rel="import" href="bower_components/core-elements/core-elements.html">
-    <link rel="import" href="suggestion-list.html">
+    <script type="text/javascript" src="/bower_components/platform/platform.js"></script>
+    <link rel="import" href="/bower_components/app-router/app-router.html">
   </head>
   <body>
-    <h1>Suggestions</h1>
-    <suggestion-list>
-    </suggestion-list>
+    <app-router>
+      <app-route path="/" import="/pages/signup-page.html"></app-route>
+      <app-route path="/login" import="/pages/login-page.html"></app-route>
+      <app-route path="/suggestions" import="/pages/suggestions-page.html"></app-route>
   </body>
 </html>
