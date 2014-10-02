@@ -1,13 +1,20 @@
-<link rel="import" href="bower_components/polymer/polymer.html">
-<link rel="import" href="suggestion-service.html">
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/core-icon-button/core-icon-button.html">
+<link rel="import" href="/suggestion-service.html">
 
 <polymer-element name="suggestion-list">
   <template>
+    <style>
+        core-icon-button {
+            margin-left: 20px;
+            color: #cccccc;
+        }
+    </style>
     <suggestion-service id="service" suggestions="{{suggestions}}">
     </suggestion-service>
     <ul>
       <template repeat="{{suggestion in suggestions}}">
-        <li>{{suggestion.name}}</li>
+        <li>{{suggestion.name}} ({{suggestion.votes}})<core-icon-button icon="thumb-up" title="thumb-up"></core-icon-button></li>
       </template>
     </ul>
   </template>
