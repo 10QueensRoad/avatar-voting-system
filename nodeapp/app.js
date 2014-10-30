@@ -3,7 +3,7 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
-var session = require('express-session')
+var session = require('express-session');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
@@ -32,7 +32,7 @@ app.use(session({secret: 'Avatar Voting Secret'}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
+app.use('/users', users.router);
 app.use('/suggestions', auth.filter, cors, suggestions);
 
 // catch 404 and forward to error handler

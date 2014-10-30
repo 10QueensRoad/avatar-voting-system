@@ -11,23 +11,23 @@ function save() {
     firebase.child('users').set(users);
 }
 
-firebase.child('users').on('value', function(snapshot) {
-    if(snapshot.val()) {
+firebase.child('users').on('value', function (snapshot) {
+    if (snapshot.val()) {
         users = snapshot.val();
         console.log('users loaded');
     }
 });
 
-var exists = function(email) {
-    for(var id in users) {
-        if(email == users[id].email) {
+var exists = function (email) {
+    for (var id in users) {
+        if (email == users[id].email) {
             return true;
         }
     }
     return false;
 };
 
-var sendVerificationCode = function(user, url) {
+var sendVerificationCode = function (user, url) {
     var mailOptions = {
         from: "Avatar Voting <robot1.yanhui@gmail.com>",
         to: user.email,
@@ -45,16 +45,16 @@ var sendVerificationCode = function(user, url) {
     });
 };
 
-router.get('/', function(req, res) {
-    res.send(_.values(users).map(function(user) {
+router.get('/', function (req, res) {
+    res.send(_.values(users).map(function (user) {
         delete user.id;
         return user;
     }));
 });
 
-router.get('/home', function(req, res) {
+router.get('/home', function (req, res) {
     var token = req.query.token;
-    if(users[token]) {
+    if (users[token]) {
         users[token].verified = true;
         save();
         req.session.user = users[token];
@@ -64,9 +64,9 @@ router.get('/home', function(req, res) {
     }
 });
 
-router.post('/', function(req, res) {
+router.post('/', function (req, res) {
     var email = req.body.email;
-    if(exists(email)) {
+    if (exists(email)) {
         res.status(409).end();
     } else {
         var id = shortId.generate();
@@ -84,4 +84,6 @@ router.post('/', function(req, res) {
     }
 });
 
-module.exports = router;
+module.exports = {router: router, validate: function (token) {
+    return !!(users[token]);
+}};
