@@ -46,7 +46,10 @@ var sendVerificationCode = function(user, url) {
 };
 
 router.get('/', function(req, res) {
-    res.send(_.values(users));
+    res.send(_.values(users).map(function(user) {
+        delete user.id;
+        return user;
+    }));
 });
 
 router.get('/home', function(req, res) {
