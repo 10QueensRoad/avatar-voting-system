@@ -57,6 +57,7 @@ router.get('/home', function(req, res) {
     if(users[token]) {
         users[token].verified = true;
         save();
+        req.session.user = users[token];
         res.send('verified');
     } else {
         res.send('invalid token');

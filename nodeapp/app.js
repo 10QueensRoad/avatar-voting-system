@@ -3,9 +3,11 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
+var session = require('express-session')
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
+var auth = require('./app/auth');
 var users = require('./routes/users');
 var suggestions = require('./routes/suggestions');
 
@@ -25,12 +27,13 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser('Avatar Voting Secret'));
+app.use(session({secret: 'Avatar Voting Secret'}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
-app.use('/suggestions', cors, suggestions);
+app.use('/suggestions', auth.filter, cors, suggestions);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
