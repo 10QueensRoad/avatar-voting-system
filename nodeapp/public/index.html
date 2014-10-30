@@ -1,0 +1,28 @@
+<!doctype html>
+<html ng-app="index">
+<head>
+    <script src="javascripts/angular.js"></script>
+    <script src="javascripts/index.js"></script>
+</head>
+<body>
+<h1>Hello, Avatar Voting</h1>
+
+<h3>First, register here</h3>
+
+<div ng-controller="RegisterController">
+    <div ng-show="error">
+        <span style="color: red; font-family: bold">Error: {{error}}</span>
+    </div>
+    <div ng-show="!created">
+        <form id="form" action="#" ng-submit="submit()">
+            <label>Email:</label>
+            <input type="email" ng-model="user.email" placeholder="Enter your email here" autofocus="true"/>
+            <button>Submit</button>
+        </form>
+    </div>
+    <div ng-show="created">
+        Now, check your email for the login Url.
+    </div>
+</div>
+</body>
+</html>
