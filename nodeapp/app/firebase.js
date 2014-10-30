@@ -1,5 +1,8 @@
 var Firebase = require("firebase");
 
-var myFirebaseRef = new Firebase("https://avtar-voting.firebaseio.com/");
+var url = process.env.FIREBASE_URL || 'https://avtar-voting.firebaseio.com/';
+console.log('Using Firebase url: ' + url);
+
+var myFirebaseRef = new Firebase(url);
 
 module.exports = myFirebaseRef;

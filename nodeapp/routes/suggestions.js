@@ -2,12 +2,12 @@ var express = require('express');
 var router = express.Router();
 var shortId = require('shortid');
 var _ = require('underscore');
-var firebase = require("../app/firebase");
+var firebase = require('../app/firebase');
 
 var suggestions = {};
 
 function save() {
-    firebase.set({'suggestions': suggestions});
+    firebase.child('suggestions').set(suggestions);
 }
 
 firebase.child('suggestions').on('value', function(snapshot) {
@@ -16,7 +16,6 @@ firebase.child('suggestions').on('value', function(snapshot) {
        console.log('suggestions loaded');
    }
 });
-
 
 var exists = function(name) {
     for(var id in suggestions) {

@@ -1,14 +1,14 @@
 var express = require('express');
 var router = express.Router();
-var firebase = require("../app/firebase");
+var firebase = require('../app/firebase');
 var shortId = require('shortid');
 var _ = require('underscore');
-var smtp = require("../app/smtp");
+var smtp = require('../app/smtp');
 
 var users = {};
 
 function save() {
-    firebase.set({'users': users});
+    firebase.child('users').set(users);
 }
 
 firebase.child('users').on('value', function(snapshot) {
@@ -27,26 +27,37 @@ var exists = function(email) {
     return false;
 };
 
-var sendVerificationCode = function(user) {
+var sendVerificationCode = function(user, url) {
     var mailOptions = {
-        from: "Avatar Voting <braveostrich@gmail.com>",
+        from: "Avatar Voting <robot1.yanhui@gmail.com>",
         to: user.email,
-        subject: "Your verification code",
-        text: user.id,
-        html: user.id
+        subject: "Your login Url",
+        text: url,
+        html: '<a href="' + url + '">' + url + '</a>'
     };
 
     smtp.sendMail(mailOptions, function (error, response) {
         if (error) {
             console.log('notification error: ' + error);
         } else {
-            console.log("Message sent: " + response.message);
+            console.log("Message sent to " + user.email);
         }
     });
 };
 
 router.get('/', function(req, res) {
     res.send(_.values(users));
+});
+
+router.get('/home', function(req, res) {
+    var token = req.query.token;
+    if(users[token]) {
+        users[token].verified = true;
+        save();
+        res.send('verified');
+    } else {
+        res.send('invalid token');
+    }
 });
 
 router.post('/', function(req, res) {
@@ -61,9 +72,11 @@ router.post('/', function(req, res) {
             created: new Date()
         };
         save();
-        sendVerificationCode(users[id]);
 
-        res.status(201).send(req.path);
+        var url = req.protocol + '://' + req.headers.host + '/users/home?token=' + id;
+        sendVerificationCode(users[id], url);
+
+        res.status(201).end();
     }
 });
 
