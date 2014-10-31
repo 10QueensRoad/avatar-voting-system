@@ -4,25 +4,43 @@
     <script src="javascripts/angular.js"></script>
     <script src="javascripts/index.js"></script>
 </head>
-<body>
+<body ng-controller="IndexController">
 <h1>Hello, Avatar Voting</h1>
 
-<h3>First, register here</h3>
+<div class="register-user" ng-show="!logged_in">
+    <h3>First, register here</h3>
 
-<div ng-controller="RegisterController">
-    <div ng-show="error">
-        <span style="color: red; font-family: bold">Error: {{error}}</span>
+    <div>
+        <div ng-show="error">
+            <span style="color: red; font-family: bold">Error: {{error}}</span>
+        </div>
+        <div ng-show="!created">
+            <form ng-submit="register()">
+                <label>Email:</label>
+                <input type="email" ng-model="user.email" placeholder="Enter your email here" autofocus="true"/>
+                <button>Submit</button>
+            </form>
+        </div>
+        <div ng-show="created">
+            Now, check your email for the login Url.
+        </div>
     </div>
-    <div ng-show="!created">
-        <form id="form" action="#" ng-submit="submit()">
-            <label>Email:</label>
-            <input type="email" ng-model="user.email" placeholder="Enter your email here" autofocus="true"/>
-            <button>Submit</button>
-        </form>
-    </div>
-    <div ng-show="created">
-        Now, check your email for the login Url.
-    </div>
+</div>
+
+<div class="suggestions" ng-show="logged_in">
+    <h3>Suggestions:</h3>
+    <ul ng-repeat="suggestion in suggestions">
+        <li>{{suggestion.name}}: {{suggestion.votes}} votes
+            <button ng-click="vote(suggestion.id)">Vote</button>
+        </li>
+    </ul>
+
+    <h3>New suggestion:</h3>
+
+    <form id="suggestion">
+        <input type="text" ng-model="suggestion"/>
+        <button ng-click="suggest()">Submit</button>
+    </form>
 </div>
 </body>
 </html>

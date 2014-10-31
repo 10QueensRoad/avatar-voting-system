@@ -24,21 +24,36 @@ router.get('/', function (req, res) {
     }));
 });
 
-router.get('/home', function (req, res) {
-    var token = req.query.token;
-    if (users[token]) {
-        users[token].verified = true;
-        save();
-        req.session.user = users[token];
-        res.send('verified');
+router.get('/verify', function (req, res) {
+    if (verify(req)) {
+        res.redirect('/');
     } else {
         res.send('invalid token');
     }
 });
 
+router.post('/verify', function (req, res) {
+    res.status(verify(req) ? 200 : 400).end();
+});
+
+var verify = function (req) {
+    var id = req.query.token || req.body.token;
+    if (users[id]) {
+        users[id].verified = true;
+        save();
+        req.session.user = users[id];
+        return true;
+    }
+    return false;
+};
+
+router.get('/login-state', function (req, res) {
+    res.status(req.session.user ? 200 : 401).end();
+});
+
 router.post('/', function (req, res) {
     var email = req.body.email;
-    var baseUrl = req.body.base_url || (req.protocol + '://' + req.headers.host + '/users/home');
+    var baseUrl = req.body.base_url || (req.protocol + '://' + req.headers.host + '/users/verify');
 
     if (exists(email)) {
         res.status(409).end();
