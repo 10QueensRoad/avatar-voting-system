@@ -38,6 +38,8 @@ router.get('/home', function (req, res) {
 
 router.post('/', function (req, res) {
     var email = req.body.email;
+    var baseUrl = req.body.base_url || (req.protocol + '://' + req.headers.host + '/users/home');
+
     if (exists(email)) {
         res.status(409).end();
     } else {
@@ -49,7 +51,7 @@ router.post('/', function (req, res) {
         };
         save();
 
-        var url = req.protocol + '://' + req.headers.host + '/users/home?token=' + id;
+        var url = baseUrl + '?token=' + id;
         sendMail(users[id], url);
 
         res.status(201).end();
