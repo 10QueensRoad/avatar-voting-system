@@ -18,37 +18,9 @@ firebase.child('users').on('value', function (snapshot) {
     }
 });
 
-var exists = function (email) {
-    for (var id in users) {
-        if (email == users[id].email) {
-            return true;
-        }
-    }
-    return false;
-};
-
-var sendVerificationCode = function (user, url) {
-    var mailOptions = {
-        from: "Avatar Voting <robot1.yanhui@gmail.com>",
-        to: user.email,
-        subject: "Your login Url",
-        text: url,
-        html: '<a href="' + url + '">' + url + '</a>'
-    };
-
-    smtp.sendMail(mailOptions, function (error, response) {
-        if (error) {
-            console.log('notification error: ' + error);
-        } else {
-            console.log("Message sent to " + user.email);
-        }
-    });
-};
-
 router.get('/', function (req, res) {
     res.send(_.values(users).map(function (user) {
-        delete user.id;
-        return user;
+        return {email: user.email, verified: user.verified};
     }));
 });
 
@@ -78,11 +50,35 @@ router.post('/', function (req, res) {
         save();
 
         var url = req.protocol + '://' + req.headers.host + '/users/home?token=' + id;
-        sendVerificationCode(users[id], url);
+        sendMail(users[id], url);
 
         res.status(201).end();
     }
 });
+
+var exists = function (email) {
+    return _.find(_.values(users), function (user) {
+        return user.email == email
+    });
+};
+
+var sendMail = function (user, url) {
+    var mailOptions = {
+        from: "Avatar Voting <robot1.yanhui@gmail.com>",
+        to: user.email,
+        subject: "Your login Url",
+        text: url,
+        html: '<a href="' + url + '">' + url + '</a>'
+    };
+
+    smtp.sendMail(mailOptions, function (error) {
+        if (error) {
+            console.log('notification error: ' + error);
+        } else {
+            console.log("Message sent to " + user.email);
+        }
+    });
+};
 
 module.exports = {router: router, validate: function (token) {
     return !!(users[token]);
