@@ -59,6 +59,7 @@ router.get('/:id', function(req, res) {
 router.post('/:id', function(req, res) {
     var id = req.params.id;
     if(suggestions[id]) {
+        //TODO: Record the source user
         suggestions[id].votes++;
         save();
         res.status(200).end();
