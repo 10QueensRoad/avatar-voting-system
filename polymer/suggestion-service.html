@@ -1,15 +1,35 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
 <link rel="import" href="bower_components/core-ajax/core-ajax.html">
+<script type="text/javascript" src="bower_components/sockjs/sockjs.js"></script>
+<script type="text/javascript" src="bower_components/vertxbus/vertxbus.js"></script>
 
 <polymer-element name="suggestion-service" attributes="suggestions">
   <template>
-    <core-ajax id="ajax" auto url="http://mrvote.herokuapp.com/suggestions" on-core-response="{{suggestionsLoaded}}" handleAs="json">
+    <core-ajax id="ajax" auto url="http://localhost:9090/suggestions" on-core-response="{{suggestionsLoaded}}" handleAs="json">
     </core-ajax>
   </template>
   <script>
     Polymer('suggestion-service', {
       created: function () {
-        this.suggestions = [];
+        var self = this;
+        self.suggestions = [];
+
+        var eb = new vertx.EventBus('http://localhost:9090/avatar/voting');
+        eb.onopen = function() {
+          eb.registerHandler('suggestion', function(suggested) {
+            var exist = false;
+            self.suggestions.forEach(function(item) {
+                if (item.name === suggested.name) {
+                    item.votes = suggested.votes;
+                    exist = true;
+                }
+            });
+
+            if (!exist) {
+                self.suggestions.splice(0, 0, suggested);
+            }
+          });
+        }
       },
       suggestionsLoaded: function () {
         this.suggestions = this.$.ajax.response.slice(0);

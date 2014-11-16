@@ -13,7 +13,7 @@
             }
         </style>
         <core-ajax id="ajax" method="POST"
-                   url="http://mrvote.herokuapp.com/suggestions"
+                   url="http://localhost:9090/suggestions"
                    contentType="application/json"
                    handleAs="json">
         </core-ajax>
@@ -27,11 +27,10 @@
     Polymer({
         submitSuggestion: function () {
             console.log('suggestionValue: value committed: ', this.suggestionValue);
-            this.$.ajax.method = 'POST';
             this.$.ajax.xhrArgs = {body: JSON.stringify({suggestion: this.suggestionValue})};
             this.$.ajax.go();
+            this.suggestionValue = '';
         }
-
     });
     </script>
 </polymer-element>

@@ -1,3 +1,4 @@
+<link rel="import" href="/bower_components/core-ajax/core-ajax.html">
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 
@@ -8,9 +9,13 @@
         width: 32em;
       }
     </style>
+    <core-ajax id="ajax" method="POST" url="http://localhost:9090/login"
+               on-core-response="{{loginResponse}}"
+               contentType="application/json" handleAs="json">
+    </core-ajax>
     <div horizontal center-justified layout>
       <div vertical layout>
-        <paper-input floatingLabel label="Please enter your email address" type="email" error="Input is not an email!"></paper-input>
+        <paper-input floatingLabel label="Please enter your email address" type="email" error="Input is not an email!" value="{{emailValue}}"></paper-input>
         <paper-button raisedButton label="Send me a login!" on-tap="{{sendEmailAddress}}"></paper-button>
       </div>
     </div>
@@ -18,7 +23,16 @@
   <script>
     Polymer({
       sendEmailAddress: function () {
-        console.log("TODO: Send email address to server");
+        console.log('emailValue: value committed: ', this.emailValue);
+        this.$.ajax.xhrArgs = {body: JSON.stringify({email: this.emailValue})};
+        this.$.ajax.go();
+      },
+
+      loginResponse: function () {
+        var voter = this.$.ajax.response;
+        if (voter && voter.id) {
+            document.querySelector('app-router').go('/suggestions');
+        }
       }
     });
   </script>

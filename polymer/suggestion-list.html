@@ -1,4 +1,5 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/core-ajax/core-ajax.html">
 <link rel="import" href="/bower_components/core-icon-button/core-icon-button.html">
 <link rel="import" href="/suggestion-service.html">
 
@@ -10,15 +11,29 @@
             color: #cccccc;
         }
     </style>
+    <core-ajax id="ajax" method="POST"
+               url="http://localhost:9090/vote"
+               contentType="application/json"
+               handleAs="json">
+    </core-ajax>
     <suggestion-service id="service" suggestions="{{suggestions}}">
     </suggestion-service>
     <ul>
       <template repeat="{{suggestion in suggestions}}">
-        <li>{{suggestion.name}} ({{suggestion.votes}})<core-icon-button icon="thumb-up" title="thumb-up"></core-icon-button></li>
+        <li>{{suggestion.name}} ({{suggestion.votes}})
+            <core-icon-button icon="thumb-up" title="thumb-up" on-tap="{{submitVote}}"
+                              data-suggestion="{{suggestion.name}}"></core-icon-button>
+        </li>
       </template>
     </ul>
   </template>
   <script>
-  Polymer({});
+    Polymer({
+        submitVote: function () {
+            console.log('suggestionValue: value committed: ', event.currentTarget.attributes['data-suggestion'].value);
+            this.$.ajax.xhrArgs = {body: JSON.stringify({suggestion: event.currentTarget.attributes['data-suggestion'].value})};
+            this.$.ajax.go();
+        }
+    });
   </script>
 </polymer-element>
