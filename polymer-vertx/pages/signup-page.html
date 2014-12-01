@@ -1,0 +1,41 @@
+<link rel="import" href="/bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/components/avatar-info.html">
+
+<polymer-element name="signup-page" noscript>
+  <template>
+    <style>
+      paper-input {
+        width: 32em;
+      }
+    </style>
+    <core-ajax id="ajax" method="POST" url="http://localhost:9090/login"
+               on-core-response="{{loginResponse}}"
+               contentType="application/json" handleAs="json">
+    </core-ajax>
+    <div horizontal center-justified layout>
+      <div vertical layout>
+        <avatar-info avatar="{{avatar}}"></avatar-info>
+        <paper-input floatingLabel label="Please enter your email address" type="email" error="Input is not an email!" value="{{emailValue}}"></paper-input>
+        <paper-button raisedButton label="Send me a login!" on-tap="{{sendEmailAddress}}"></paper-button>
+      </div>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      sendEmailAddress: function () {
+        console.log('avatar: ' + this.avatar + ', emailValue: value committed: ', this.emailValue);
+        this.$.ajax.xhrArgs = {body: JSON.stringify({avatar: this.avatar, email: this.emailValue})};
+        this.$.ajax.go();
+      },
+
+      loginResponse: function () {
+        var voter = this.$.ajax.response;
+        if (voter && voter.id) {
+            document.querySelector('app-router').go('/suggestions/' + voter.id);
+        }
+      }
+    });
+  </script>
+</polymer-element>

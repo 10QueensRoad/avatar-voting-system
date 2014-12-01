@@ -1,0 +1,39 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="/bower_components/core-icon-button/core-icon-button.html">
+
+<polymer-element name="avatar-list" attribute="refresh">
+  <template>
+    <style>
+        core-icon-button {
+            margin-left: 20px;
+            color: #cccccc;
+        }
+    </style>
+
+    <core-ajax id="ajax" auto url="http://localhost:9090/avatars" method="GET"
+               on-core-response="{{avatarsLoaded}}"
+               on-core-error="{{errorOccurred}}" handleAs="json">
+    </core-ajax>
+
+    <ul>
+      <template repeat="{{avatar in avatars}}">
+        <li>{{avatar.candidate}}, {{avatar.candidateEmail}}, {{avatar.name}}</li>
+      </template>
+    </ul>
+  </template>
+  <script>
+    Polymer({
+      avatarsLoaded: function () {
+        this.avatars = this.$.ajax.response.slice(0);
+      },
+      errorOccurred: function(e) {
+        console.log(this.$.ajax.error);
+      },
+      refreshChanged: function() {
+        console.log('refreshChanged!');
+        this.$.ajax.go();
+      }
+    });
+  </script>
+</polymer-element>

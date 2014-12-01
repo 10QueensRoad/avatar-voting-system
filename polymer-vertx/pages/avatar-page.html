@@ -1,0 +1,14 @@
+<link rel="import" href="/components/avatar-list.html">
+<link rel="import" href="/components/avatar-submit.html">
+<polymer-element name="avatar-page" noscript>
+  <template>
+      <div horizontal center-justified layout>
+          <div vertical layout>
+            <h1>Avatar management</h1>
+            <avatar-submit refresh="{{refresh}}"></avatar-submit>
+            <h1>Avatars</h1>
+            <avatar-list refresh="{{refresh}}"></avatar-list>
+          </div>
+      </div>
+  </template>
+</polymer-element>
