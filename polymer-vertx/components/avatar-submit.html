@@ -46,6 +46,7 @@
         },
         succeeded: function() {
             this.refresh = new Date();
+            console.log('refresh', this.refresh);
         },
         errorOccurred: function(e) {
             this.$.message.text = 'status: ' + e.detail.xhr.status + ', ' + e.detail.xhr.statusText;

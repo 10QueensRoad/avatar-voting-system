@@ -2,12 +2,18 @@
 <link rel="import" href="/bower_components/core-ajax/core-ajax.html">
 <link rel="import" href="/bower_components/core-icon-button/core-icon-button.html">
 
-<polymer-element name="avatar-list" attribute="refresh">
+<polymer-element name="avatar-list" attributes="refresh">
   <template>
     <style>
         core-icon-button {
             margin-left: 20px;
             color: #cccccc;
+        }
+        table thead tr th {
+            border: 1px solid #000000;
+        }
+        table tbody tr td {
+            border: 1px solid #cccccc;
         }
     </style>
 
@@ -16,11 +22,28 @@
                on-core-error="{{errorOccurred}}" handleAs="json">
     </core-ajax>
 
-    <ul>
-      <template repeat="{{avatar in avatars}}">
-        <li>{{avatar.candidate}}, {{avatar.candidateEmail}}, {{avatar.name}}</li>
-      </template>
-    </ul>
+    <table>
+      <thead>
+        <tr>
+            <th>Candidate</th>
+            <th>Email</th>
+            <th width="30%">Avatar</th>
+            <th>Suggestion open</th>
+            <th>Vote open</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template repeat="{{avatar in avatars}}">
+          <tr>
+              <td>{{avatar.candidate}}</td>
+              <td>{{avatar.candidateEmail}}</td>
+              <td>{{avatar.name ? avatar.name : ''}}</td>
+              <td>{{avatar.suggestionOpen}}</td>
+              <td>{{avatar.voteOpen}}</td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
   </template>
   <script>
     Polymer({
@@ -30,8 +53,7 @@
       errorOccurred: function(e) {
         console.log(this.$.ajax.error);
       },
-      refreshChanged: function() {
-        console.log('refreshChanged!');
+      refreshChanged: function(oldValue, newValue) {
         this.$.ajax.go();
       }
     });

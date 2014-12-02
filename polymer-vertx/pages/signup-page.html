@@ -3,7 +3,7 @@
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/components/avatar-info.html">
 
-<polymer-element name="signup-page" noscript>
+<polymer-element name="signup-page">
   <template>
     <style>
       paper-input {
@@ -16,7 +16,7 @@
     </core-ajax>
     <div horizontal center-justified layout>
       <div vertical layout>
-        <avatar-info avatar="{{avatar}}"></avatar-info>
+        <avatar-info avatarId="{{avatarId}}"></avatar-info>
         <paper-input floatingLabel label="Please enter your email address" type="email" error="Input is not an email!" value="{{emailValue}}"></paper-input>
         <paper-button raisedButton label="Send me a login!" on-tap="{{sendEmailAddress}}"></paper-button>
       </div>
@@ -25,11 +25,10 @@
   <script>
     Polymer({
       sendEmailAddress: function () {
-        console.log('avatar: ' + this.avatar + ', emailValue: value committed: ', this.emailValue);
-        this.$.ajax.xhrArgs = {body: JSON.stringify({avatar: this.avatar, email: this.emailValue})};
+        console.log('avatarId: ' + this.avatarId + ', emailValue: value committed: ', this.emailValue);
+        this.$.ajax.xhrArgs = {body: JSON.stringify({avatarId: this.avatarId, email: this.emailValue})};
         this.$.ajax.go();
       },
-
       loginResponse: function () {
         var voter = this.$.ajax.response;
         if (voter && voter.id) {

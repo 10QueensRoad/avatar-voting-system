@@ -1,0 +1,27 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="/bower_components/core-icon-button/core-icon-button.html">
+
+<polymer-element name="avatar-info" attributes="avatarId">
+  <template>
+    <core-ajax id="ajaxAvatar" auto url="http://localhost:9090/avatar-last" method="GET"
+               on-core-response="{{avatarLoaded}}" handleAs="json">
+    </core-ajax>
+    <div horizontal center-justified layout>
+        <div vertical layout>
+            <h1>Avatar for '{{avatar.candidate}}'</h1>
+            <p>Suggestion is {{avatar.suggestionOpen ? 'open' : 'close'}}</p>
+            <p>Vote is {{avatar.voteOpen ? 'open' : 'close'}}</p>
+        </div>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      avatarLoaded: function () {
+        this.avatar = this.$.ajaxAvatar.response;
+        this.avatarId = this.avatar.id;
+        console.log('last avatar', this.avatar);
+      }
+    });
+  </script>
+</polymer-element>
