@@ -1,11 +1,13 @@
 <link rel="import" href="/components/suggestion-list.html">
 <link rel="import" href="/components/suggestion-submit.html">
+<link rel="import" href="/components/show-message.html">
 <polymer-element name="suggestions-page" attributes="avatar voter" noscript>
   <template>
       <div horizontal center-justified layout>
           <div vertical layout>
+            <show-message message="{{message}}"></show-message>
             <h1>Mr man / Little miss</h1>
-            <suggestion-submit avatar="{{avatar}}" voter="{{voter}}"></suggestion-submit>
+            <suggestion-submit message="{{message}}" avatar="{{avatar}}" voter="{{voter}}"></suggestion-submit>
             <h1>Suggestions</h1>
             <suggestion-list avatar="{{avatar}}" voter="{{voter}}"></suggestion-list>
           </div>

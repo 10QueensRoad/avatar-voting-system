@@ -1,13 +1,15 @@
 <link rel="import" href="/components/avatar-list.html">
 <link rel="import" href="/components/avatar-submit.html">
+<link rel="import" href="/components/show-message.html">
 <polymer-element name="avatar-page" noscript>
   <template>
       <div horizontal center-justified layout>
           <div vertical layout>
+            <show-message message="{{message}}"></show-message>
             <h1>Avatar management</h1>
-            <avatar-submit refresh="{{refresh}}"></avatar-submit>
+            <avatar-submit message="{{message}}" refresh="{{refresh}}"></avatar-submit>
             <h1>Avatars</h1>
-            <avatar-list refresh="{{refresh}}"></avatar-list>
+            <avatar-list message="{{message}}" refresh="{{refresh}}"></avatar-list>
           </div>
       </div>
   </template>

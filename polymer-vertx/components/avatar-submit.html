@@ -4,9 +4,8 @@
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 
-<polymer-element name="avatar-submit" attributes="refresh">
+<polymer-element name="avatar-submit" attributes="message">
     <template>
         <style>
             paper-fab {
@@ -20,11 +19,6 @@
                    on-core-error="{{errorOccurred}}"
                    handleAs="json">
         </core-ajax>
-        <core-field>
-            <paper-toast id="message" role="alert"
-                         class="capsule"
-                         style="padding-right: 60px;width:100%;"></paper-toast>
-        </core-field>
         <core-field>
             <paper-input id="candidate" name="candidate" value="{{candidate}}"
                          label="Candidate for new avatar" floatingLabel autofocus></paper-input>
@@ -45,12 +39,10 @@
             this.candidateEmail = '';
         },
         succeeded: function() {
-            this.refresh = new Date();
-            console.log('refresh', this.refresh);
+            this.message = 'Candidate for new avatar was saved successfully.';
         },
         errorOccurred: function(e) {
-            this.$.message.text = 'status: ' + e.detail.xhr.status + ', ' + e.detail.xhr.statusText;
-            this.$.message.show();
+            this.message = 'status: ' + e.detail.xhr.status + ', ' + e.detail.xhr.statusText;
         }
     });
     </script>

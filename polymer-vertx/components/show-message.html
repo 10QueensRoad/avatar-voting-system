@@ -1,0 +1,21 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/core-field/core-field.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+
+<polymer-element name="show-message" attributes="message">
+    <template>
+        <core-field>
+            <paper-toast id="toastMessage" role="alert"
+                         class="capsule"
+                         style="padding-right: 60px;width:100%;"></paper-toast>
+        </core-field>
+     </template>
+    <script>
+    Polymer({
+        messageChanged: function () {
+            this.$.toastMessage.text = this.message;
+            this.$.toastMessage.show();
+        }
+    });
+    </script>
+</polymer-element>

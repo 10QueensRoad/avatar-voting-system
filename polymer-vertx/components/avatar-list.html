@@ -2,13 +2,9 @@
 <link rel="import" href="/bower_components/core-ajax/core-ajax.html">
 <link rel="import" href="/bower_components/core-icon-button/core-icon-button.html">
 
-<polymer-element name="avatar-list" attributes="refresh">
+<polymer-element name="avatar-list" attributes="message">
   <template>
     <style>
-        core-icon-button {
-            margin-left: 20px;
-            color: #cccccc;
-        }
         table thead tr th {
             border: 1px solid #000000;
         }
@@ -17,19 +13,42 @@
         }
     </style>
 
-    <core-ajax id="ajax" auto url="http://localhost:9090/avatars" method="GET"
+    <core-ajax id="ajaxList" auto method="GET"
+               url="http://localhost:9090/avatars"
                on-core-response="{{avatarsLoaded}}"
-               on-core-error="{{errorOccurred}}" handleAs="json">
+               on-core-error="{{errorOccurred}}"
+               handleAs="json">
     </core-ajax>
 
+    <core-ajax id="ajaxDelete" method="POST"
+               url="http://localhost:9090/avatar-delete"
+               on-core-response="{{deleted}}"
+               on-core-error="{{errorOccurred}}"
+               handleAs="json">
+    </core-ajax>
+
+    <core-ajax id="ajaxSuggestionControl" method="POST"
+               url="http://localhost:9090/avatar-suggestion-control"
+               on-core-response="{{suggestionControlled}}"
+               on-core-error="{{errorOccurred}}"
+               handleAs="json">
+    </core-ajax>
+
+    <core-ajax id="ajaxVoteControl" method="POST"
+               url="http://localhost:9090/avatar-vote-control"
+               on-core-response="{{voteControlled}}"
+               on-core-error="{{errorOccurred}}"
+               handleAs="json">
+    </core-ajax>
     <table>
       <thead>
         <tr>
             <th>Candidate</th>
             <th>Email</th>
-            <th width="30%">Avatar</th>
+            <th>Avatar</th>
             <th>Suggestion open</th>
             <th>Vote open</th>
+            <th>Delete</th>
         </tr>
       </thead>
       <tbody>
@@ -38,8 +57,36 @@
               <td>{{avatar.candidate}}</td>
               <td>{{avatar.candidateEmail}}</td>
               <td>{{avatar.name ? avatar.name : ''}}</td>
-              <td>{{avatar.suggestionOpen}}</td>
-              <td>{{avatar.voteOpen}}</td>
+              <td>
+                  <template if="{{avatar.suggestionOpen}}">
+                      <core-icon-button icon="lock-open" title="lock-open"
+                                        on-tap="{{submitSuggestionControl}}"
+                                        data-avatar="{{avatar.id}}"
+                                        data-suggestion-open="{{!avatar.suggestionOpen}}"></core-icon-button>
+                  </template>
+                  <template if="{{!avatar.suggestionOpen}}">
+                      <core-icon-button icon="lock" title="lock"
+                                        on-tap="{{submitSuggestionControl}}"
+                                        data-avatar="{{avatar.id}}"
+                                        data-suggestion-open="{{avatar.suggestionOpen}}"></core-icon-button>
+                  </template>
+              </td>
+              <td>
+                  <template if="{{avatar.voteOpen}}">
+                      <core-icon-button icon="lock-open" title="lock-open"
+                                        on-tap="{{submitVoteControl}}"
+                                        data-avatar="{{avatar.id}}"
+                                        data-vote-open="{{!avatar.voteOpen}}"></core-icon-button>
+                  </template>
+                  <template if="{{!avatar.voteOpen}}">
+                      <core-icon-button icon="lock" title="lock"
+                                        on-tap="{{submitVoteControl}}"
+                                        data-avatar="{{avatar.id}}"
+                                        data-vote-open="{{avatar.voteOpen}}"></core-icon-button>
+                  </template>
+              </td>
+              <td><core-icon-button icon="delete" title="delete" on-tap="{{submitDelete}}"
+                                    data-avatar="{{avatar.id}}"></core-icon-button></td>
           </tr>
         </template>
       </tbody>
@@ -47,14 +94,43 @@
   </template>
   <script>
     Polymer({
-      avatarsLoaded: function () {
-        this.avatars = this.$.ajax.response.slice(0);
+      messageChanged: function(oldValue, newValue) {
+        this.$.ajaxList.go();
       },
       errorOccurred: function(e) {
-        console.log(this.$.ajax.error);
+        this.message = 'status: ' + e.detail.xhr.status + ', ' + e.detail.xhr.statusText;
       },
-      refreshChanged: function(oldValue, newValue) {
-        this.$.ajax.go();
+      avatarsLoaded: function () {
+        this.avatars = this.$.ajaxList.response.slice(0);
+      },
+      submitDelete: function () {
+        this.$.ajaxDelete.xhrArgs = {body: JSON.stringify({
+            avatarId: parseInt(event.currentTarget.attributes['data-avatar'].value)})};
+        this.$.ajaxDelete.go();
+      },
+      deleted: function() {
+        this.message = 'Avatar was deleted successfully.';
+      },
+      submitSuggestionControl: function () {
+        this.$.ajaxSuggestionControl.xhrArgs = {body: JSON.stringify({
+            avatarId: parseInt(event.currentTarget.attributes['data-avatar'].value),
+            suggestionOpen: (event.currentTarget.attributes['data-suggestion-open'].value  === 'true')})};
+            console.log('suggestionOpen:',  event.currentTarget.attributes['data-suggestion-open'].value === 'true');
+        this.$.ajaxSuggestionControl.go();
+      },
+      suggestionControlled: function () {
+        var suggestionOpen = this.$.ajaxSuggestionControl.response.suggestionOpen;
+        this.message = 'Suggestion for the avatar was ' + suggestionOpen + ' successfully.';
+      },
+      submitVoteControl: function () {
+        this.$.ajaxVoteControl.xhrArgs = {body: JSON.stringify({
+            avatarId: parseInt(event.currentTarget.attributes['data-avatar'].value),
+            voteOpen: (event.currentTarget.attributes['data-vote-open'].value === 'true')})};
+        this.$.ajaxVoteControl.go();
+      },
+      voteControlled: function () {
+        var voteOpen = this.$.ajaxVoteControl.response.voteOpen;
+        this.message = 'Vote for the avatar was ' + voteOpen + ' successfully.';
       }
     });
   </script>

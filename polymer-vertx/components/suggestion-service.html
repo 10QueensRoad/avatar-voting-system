@@ -5,11 +5,14 @@
 
 <polymer-element name="suggestion-service" attributes="suggestions">
   <template>
-    <core-ajax id="ajax" auto url="http://localhost:9090/suggestions" on-core-response="{{suggestionsLoaded}}" handleAs="json">
+    <core-ajax id="ajax" auto
+               url="http://localhost:9090/suggestions"
+               on-core-response="{{suggestionsLoaded}}"
+               handleAs="json">
     </core-ajax>
   </template>
   <script>
-    Polymer('suggestion-service', {
+    Polymer({
       created: function () {
         var self = this;
         self.suggestions = [];
