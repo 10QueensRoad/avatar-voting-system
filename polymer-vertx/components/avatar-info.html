@@ -4,8 +4,8 @@
 
 <polymer-element name="avatar-info" attributes="avatarId">
   <template>
-    <core-ajax id="ajaxAvatar" auto url="http://localhost:9090/avatar-last"
-               method="GET"
+    <core-ajax id="ajaxAvatar" auto method="GET"
+               url="http://localhost:9090/avatar-last"
                on-core-response="{{avatarLoaded}}"
                handleAs="json">
     </core-ajax>
@@ -16,8 +16,8 @@
             </template>
             <template if="{{avatarId}}">
                 <h1>Avatar for '{{avatar.candidate}}'</h1>
-                <p>Suggestion is {{avatar.suggestionOpen ? 'open' : 'close'}}</p>
-                <p>Vote is {{avatar.voteOpen ? 'open' : 'close'}}</p>
+                <p>Suggestion is {{avatar.suggestionOpenString}}</p>
+                <p>Vote is {{avatar.voteOpenString}}</p>
             </template>
         </div>
     </div>
@@ -26,7 +26,6 @@
     Polymer({
       avatarLoaded: function () {
         this.avatar = this.$.ajaxAvatar.response;
-        console.log('avatar', this.avatar);
         if (this.avatar) {
             this.avatarId = this.avatar.id;
         }

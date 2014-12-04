@@ -3,7 +3,7 @@
 <link rel="import" href="/bower_components/core-icon-button/core-icon-button.html">
 <link rel="import" href="/components/suggestion-service.html">
 
-<polymer-element name="suggestion-list" attributes="avatar voter">
+<polymer-element name="suggestion-list" attributes="avatarId voterId">
   <template>
     <style>
         core-icon-button {
@@ -16,7 +16,7 @@
                contentType="application/json"
                handleAs="json">
     </core-ajax>
-    <suggestion-service id="service" suggestions="{{suggestions}}">
+    <suggestion-service id="service" avatarId="{{avatarId}}" suggestions="{{suggestions}}">
     </suggestion-service>
     <ul>
       <template repeat="{{suggestion in suggestions}}">
@@ -31,7 +31,7 @@
     Polymer({
         submitVote: function () {
             console.log('suggestionValue: value committed: ', event.currentTarget.attributes['data-suggestion'].value);
-            this.$.ajax.xhrArgs = {body: JSON.stringify({voter: this.voter, suggestion: event.currentTarget.attributes['data-suggestion'].value})};
+            this.$.ajax.xhrArgs = {body: JSON.stringify({avatarId: this.avatarId, voterId: this.voterId, suggestion: event.currentTarget.attributes['data-suggestion'].value})};
             this.$.ajax.go();
         }
     });

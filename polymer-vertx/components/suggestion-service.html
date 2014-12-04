@@ -3,17 +3,19 @@
 <script type="text/javascript" src="/bower_components/sockjs/sockjs.js"></script>
 <script type="text/javascript" src="/bower_components/vertxbus/vertxbus.js"></script>
 
-<polymer-element name="suggestion-service" attributes="suggestions">
+<polymer-element name="suggestion-service" attributes="avatarId suggestions">
   <template>
-    <core-ajax id="ajax" auto
+    <core-ajax id="ajaxList" method="GET"
                url="http://localhost:9090/suggestions"
                on-core-response="{{suggestionsLoaded}}"
+               on-core-error="{{errorOccurred}}"
+               contentType="application/json"
                handleAs="json">
     </core-ajax>
   </template>
   <script>
     Polymer({
-      created: function () {
+      ready: function () {
         var self = this;
         self.suggestions = [];
 
@@ -32,10 +34,20 @@
                 self.suggestions.splice(0, 0, suggested);
             }
           });
-        }
+        };
+
+        this.$.ajaxList.param = { avatarId: this.avatarId };
+        this.$.ajaxList.go();
       },
       suggestionsLoaded: function () {
-        this.suggestions = this.$.ajax.response.slice(0);
+        this.suggestions = this.$.ajaxList.response.slice(0);
+      },
+      errorOccurred: function(e) {
+        this.message = {
+            type: 'error',
+            text: 'status: ' + e.detail.xhr.status + ', ' + e.detail.xhr.statusText,
+            timestamp: new Date().getTime()
+        }
       }
     });
   </script>

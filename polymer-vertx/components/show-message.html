@@ -13,7 +13,7 @@
     <script>
     Polymer({
         messageChanged: function () {
-            this.$.toastMessage.text = this.message;
+            this.$.toastMessage.text = this.message.text;
             this.$.toastMessage.show();
         }
     });

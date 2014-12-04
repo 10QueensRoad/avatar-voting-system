@@ -68,7 +68,7 @@
                       <core-icon-button icon="lock" title="lock"
                                         on-tap="{{submitSuggestionControl}}"
                                         data-avatar="{{avatar.id}}"
-                                        data-suggestion-open="{{avatar.suggestionOpen}}"></core-icon-button>
+                                        data-suggestion-open="{{!avatar.suggestionOpen}}"></core-icon-button>
                   </template>
               </td>
               <td>
@@ -82,7 +82,7 @@
                       <core-icon-button icon="lock" title="lock"
                                         on-tap="{{submitVoteControl}}"
                                         data-avatar="{{avatar.id}}"
-                                        data-vote-open="{{avatar.voteOpen}}"></core-icon-button>
+                                        data-vote-open="{{!avatar.voteOpen}}"></core-icon-button>
                   </template>
               </td>
               <td><core-icon-button icon="delete" title="delete" on-tap="{{submitDelete}}"
@@ -98,7 +98,11 @@
         this.$.ajaxList.go();
       },
       errorOccurred: function(e) {
-        this.message = 'status: ' + e.detail.xhr.status + ', ' + e.detail.xhr.statusText;
+        this.message = {
+            type: 'error',
+            text: 'status: ' + e.detail.xhr.status + ', ' + e.detail.xhr.statusText,
+            timestamp: new Date().getTime()
+        }
       },
       avatarsLoaded: function () {
         this.avatars = this.$.ajaxList.response.slice(0);
@@ -109,18 +113,24 @@
         this.$.ajaxDelete.go();
       },
       deleted: function() {
-        this.message = 'Avatar was deleted successfully.';
+        this.message = {
+            type: 'success',
+            text: 'Avatar was deleted successfully.',
+            timestamp: new Date().getTime()
+        }
       },
       submitSuggestionControl: function () {
         this.$.ajaxSuggestionControl.xhrArgs = {body: JSON.stringify({
             avatarId: parseInt(event.currentTarget.attributes['data-avatar'].value),
             suggestionOpen: (event.currentTarget.attributes['data-suggestion-open'].value  === 'true')})};
-            console.log('suggestionOpen:',  event.currentTarget.attributes['data-suggestion-open'].value === 'true');
         this.$.ajaxSuggestionControl.go();
       },
       suggestionControlled: function () {
-        var suggestionOpen = this.$.ajaxSuggestionControl.response.suggestionOpen;
-        this.message = 'Suggestion for the avatar was ' + suggestionOpen + ' successfully.';
+        this.message = {
+            type: 'success',
+            text: 'Suggestion for the avatar was ' + this.$.ajaxSuggestionControl.response.suggestionOpen + ' successfully.',
+            timestamp: new Date().getTime()
+        }
       },
       submitVoteControl: function () {
         this.$.ajaxVoteControl.xhrArgs = {body: JSON.stringify({
@@ -129,8 +139,11 @@
         this.$.ajaxVoteControl.go();
       },
       voteControlled: function () {
-        var voteOpen = this.$.ajaxVoteControl.response.voteOpen;
-        this.message = 'Vote for the avatar was ' + voteOpen + ' successfully.';
+        this.message = {
+            type: 'success',
+            text: 'Vote for the avatar was ' + this.$.ajaxVoteControl.response.voteOpen + ' successfully.',
+            timestamp: new Date().getTime()
+        };
       }
     });
   </script>

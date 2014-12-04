@@ -39,10 +39,18 @@
             this.candidateEmail = '';
         },
         succeeded: function() {
-            this.message = 'Candidate for new avatar was saved successfully.';
+            this.message = {
+                type: 'success',
+                text: 'Candidate for new avatar was saved successfully.',
+                timestamp: new Date().getTime()
+            }
         },
         errorOccurred: function(e) {
-            this.message = 'status: ' + e.detail.xhr.status + ', ' + e.detail.xhr.statusText;
+            this.message = {
+                type: 'error',
+                text: 'status: ' + e.detail.xhr.status + ', ' + e.detail.xhr.statusText,
+                timestamp: new Date().getTime()
+            }
         }
     });
     </script>
