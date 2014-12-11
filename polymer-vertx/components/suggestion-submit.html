@@ -5,7 +5,7 @@
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-fab/paper-fab.html">
 
-<polymer-element name="suggestion-submit" attributes="voter">
+<polymer-element name="suggestion-submit" attributes="message avatarId voterId">
     <template>
         <style>
             paper-fab {
@@ -14,7 +14,7 @@
         </style>
         <core-ajax id="ajax" method="POST"
                    url="http://localhost:9090/suggestions"
-                   contentType="application/json"
+                   on-core-error="{{errorOccurred}}"
                    handleAs="json">
         </core-ajax>
         <core-field>
@@ -27,9 +27,17 @@
     Polymer({
         submitSuggestion: function () {
             console.log('suggestionValue: value committed: ', this.suggestionValue);
-            this.$.ajax.xhrArgs = {body: JSON.stringify({voter: this.voter, suggestion: this.suggestionValue})};
+            this.$.ajax.xhrArgs = {body: JSON.stringify({
+                avatarId: this.avatarId, voterId: this.voterId, suggestion: this.suggestionValue})};
             this.$.ajax.go();
             this.suggestionValue = '';
+        },
+        errorOccurred: function(e) {
+            this.message = {
+                type: 'error',
+                text: 'status: ' + e.detail.xhr.status + ', ' + e.detail.xhr.statusText,
+                timestamp: new Date().getTime()
+            }
         }
     });
     </script>

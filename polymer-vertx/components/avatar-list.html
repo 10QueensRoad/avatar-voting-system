@@ -114,7 +114,7 @@
       },
       deleted: function() {
         this.message = {
-            type: 'success',
+            type: 'info',
             text: 'Avatar was deleted successfully.',
             timestamp: new Date().getTime()
         }
@@ -127,7 +127,7 @@
       },
       suggestionControlled: function () {
         this.message = {
-            type: 'success',
+            type: 'info',
             text: 'Suggestion for the avatar was ' + this.$.ajaxSuggestionControl.response.suggestionOpen + ' successfully.',
             timestamp: new Date().getTime()
         }
@@ -140,7 +140,7 @@
       },
       voteControlled: function () {
         this.message = {
-            type: 'success',
+            type: 'info',
             text: 'Vote for the avatar was ' + this.$.ajaxVoteControl.response.voteOpen + ' successfully.',
             timestamp: new Date().getTime()
         };

@@ -3,13 +3,12 @@
 <script type="text/javascript" src="/bower_components/sockjs/sockjs.js"></script>
 <script type="text/javascript" src="/bower_components/vertxbus/vertxbus.js"></script>
 
-<polymer-element name="suggestion-service" attributes="avatarId suggestions">
+<polymer-element name="suggestion-service" attributes="message avatarId voterId suggestions">
   <template>
     <core-ajax id="ajaxList" method="GET"
                url="http://localhost:9090/suggestions"
                on-core-response="{{suggestionsLoaded}}"
                on-core-error="{{errorOccurred}}"
-               contentType="application/json"
                handleAs="json">
     </core-ajax>
   </template>
@@ -22,25 +21,41 @@
         var eb = new vertx.EventBus('http://localhost:9090/avatar/voting');
         eb.onopen = function() {
           eb.registerHandler('suggestion', function(suggested) {
-            var exist = false;
+          var suggestion = JSON.parse(suggested);
+          suggestion.thumbType = suggestion.voters.indexOf(self.voterId) > -1;
             self.suggestions.forEach(function(item) {
-                if (item.name === suggested.name) {
-                    item.votes = suggested.votes;
-                    exist = true;
+                if (item.id === suggestion.id) {
+                    suggestion.voted = item.voters.length < suggestion.voters.length;
+                    suggestion.exist = true;
+                    item.voters = suggestion.voters;
+                    item.suggesterId = suggestion.suggesterId;
+                    item.suggesterEmail = suggestion.suggesterEmail;
+                    item.thumbType = (item.voters.indexOf(self.voterId) > -1) ? 'thumb-down': 'thumb-up';
                 }
             });
 
-            if (!exist) {
-                self.suggestions.splice(0, 0, suggested);
+            var msgText = '\'' + suggestion.name + '\' was ' + (suggestion.voted ? 'endorsed':'unvoted') + '.';
+            if (!suggestion.exist) {
+                self.suggestions.splice(0, 0, suggestion);
+                msgText = '\'' + suggestion.name + '\' was added by ' + suggestion.suggesterEmail + '.';
+            }
+
+            self.message = {
+                type: 'info',
+                text: msgText,
+                timestamp: new Date().getTime()
             }
           });
         };
 
-        this.$.ajaxList.param = { avatarId: this.avatarId };
+        this.$.ajaxList.params = JSON.stringify({avatarId: this.avatarId});
         this.$.ajaxList.go();
       },
       suggestionsLoaded: function () {
         this.suggestions = this.$.ajaxList.response.slice(0);
+        this.suggestions.forEach(function(item) {
+            item.thumbType = 'thumb-up';
+        });
       },
       errorOccurred: function(e) {
         this.message = {
