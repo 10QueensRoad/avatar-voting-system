@@ -13,26 +13,27 @@
     <core-ajax id="ajax" method="POST" url="http://localhost:9090/login"
                on-core-response="{{loggedIn}}"
                on-core-error="{{loggedInError}}"
-               contentType="application/json" handleAs="json">
+               handleAs="json">
     </core-ajax>
     <div horizontal center-justified layout>
       <div vertical layout>
         <avatar-info avatarId="{{avatarId}}"></avatar-info>
-        <paper-input floatingLabel label="Please enter your email address" type="email" error="Input is not an email!" value="{{emailValue}}"></paper-input>
-        <paper-button raisedButton label="Send me a login!" on-tap="{{submitLogin}}"></paper-button>
+        <paper-input floatingLabel label="Please enter your email address"
+                     type="email" error="Input is not an email!"
+                     value="{{emailValue}}"></paper-input>
+        <paper-button raisedButton label="Send me a login!"
+                      on-tap="{{submitLogin}}"></paper-button>
       </div>
     </div>
   </template>
   <script>
     Polymer({
       submitLogin: function () {
-        console.log('avatarId: ' + this.avatarId + ', committed: ', this.emailValue);
         this.$.ajax.xhrArgs = {body: JSON.stringify({avatarId: this.avatarId, email: this.emailValue})};
         this.$.ajax.go();
       },
       loggedIn: function () {
         var voter = this.$.ajax.response;
-        console.log('loggedIn voter:', voter);
         if (voter && voter.id) {
             document.querySelector('app-router').go('/suggestions/' + this.avatarId + '/' + voter.id);
         }

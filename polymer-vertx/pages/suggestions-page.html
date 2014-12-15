@@ -7,10 +7,10 @@
       <div horizontal center-justified layout>
           <div vertical layout>
             <show-message message="{{message}}"></show-message>
-            <avatar-info avatarId="{{avatarId}}"></avatar-info>
-            <suggestion-submit message="{{message}}" avatarId="{{avatarId}}" voterId="{{voterId}}"></suggestion-submit>
+            <avatar-info avatarId="{{avatarId}}" suggestionOpen="{{suggestionOpen}}" voteOpen="{{voteOpen}}"></avatar-info>
+            <suggestion-submit message="{{message}}" suggestionOpen="{{suggestionOpen}}" avatarId="{{avatarId}}" voterId="{{voterId}}"></suggestion-submit>
             <h1>Suggestions</h1>
-            <suggestion-list message="{{message}}" avatarId="{{avatarId}}" voterId="{{voterId}}"></suggestion-list>
+            <suggestion-list message="{{message}}" voteOpen="{{voteOpen}}" avatarId="{{avatarId}}" voterId="{{voterId}}"></suggestion-list>
           </div>
       </div>
   </template>

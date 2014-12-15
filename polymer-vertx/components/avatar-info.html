@@ -2,7 +2,7 @@
 <link rel="import" href="/bower_components/core-ajax/core-ajax.html">
 <link rel="import" href="/bower_components/core-icon-button/core-icon-button.html">
 
-<polymer-element name="avatar-info" attributes="avatarId">
+<polymer-element name="avatar-info" attributes="avatarId suggestionOpen voteOpen">
   <template>
     <core-ajax id="ajaxAvatar" auto method="GET"
                url="http://localhost:9090/avatar-last"
@@ -29,6 +29,8 @@
         this.avatar = this.$.ajaxAvatar.response;
         if (this.avatar) {
             this.avatarId = this.avatar.id;
+            this.suggestionOpen = this.avatar.suggestionOpen;
+            this.voteOpen = this.avatar.voteOpen;
         }
       }
     });

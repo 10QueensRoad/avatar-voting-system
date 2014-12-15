@@ -5,7 +5,7 @@
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-fab/paper-fab.html">
 
-<polymer-element name="suggestion-submit" attributes="message avatarId voterId">
+<polymer-element name="suggestion-submit" attributes="message suggestionOpen avatarId voterId">
     <template>
         <style>
             paper-fab {
@@ -17,16 +17,20 @@
                    on-core-error="{{errorOccurred}}"
                    handleAs="json">
         </core-ajax>
-        <core-field>
-            <paper-input id="suggestionValue" name="suggestionValue" value="{{suggestionValue}}"
-                         label="Suggest mr man or little miss" floatingLabel autofocus></paper-input>
-            <paper-fab icon="create" raisedButton on-tap="{{submitSuggestion}}"></paper-fab>
-        </core-field>
+        <template if="{{suggestionOpen}}">
+            <core-field>
+                <paper-input id="suggestionValue" name="suggestionValue"
+                             value="{{suggestionValue}}"
+                             label="Suggest mr man or little miss"
+                             floatingLabel autofocus></paper-input>
+                <paper-fab icon="create" raisedButton
+                           on-tap="{{submitSuggestion}}"></paper-fab>
+            </core-field>
+        </template>
     </template>
     <script>
     Polymer({
         submitSuggestion: function () {
-            console.log('suggestionValue: value committed: ', this.suggestionValue);
             this.$.ajax.xhrArgs = {body: JSON.stringify({
                 avatarId: this.avatarId, voterId: this.voterId, suggestion: this.suggestionValue})};
             this.$.ajax.go();

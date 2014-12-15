@@ -3,7 +3,7 @@
 <link rel="import" href="/bower_components/core-icon-button/core-icon-button.html">
 <link rel="import" href="/components/suggestion-service.html">
 
-<polymer-element name="suggestion-list" attributes="message avatarId voterId">
+<polymer-element name="suggestion-list" attributes="message voteOpen avatarId voterId">
   <template>
     <style>
         core-icon-button.thumb-down /deep/ core-icon[role=img] {
@@ -24,14 +24,21 @@
                on-core-error="{{errorOccurred}}"
                handleAs="json">
     </core-ajax>
-    <suggestion-service id="service" message="{{message}}" avatarId="{{avatarId}}" voterId="{{voterId}}" suggestions="{{suggestions}}">
+    <suggestion-service id="service"
+                        message="{{message}}"
+                        avatarId="{{avatarId}}"
+                        voterId="{{voterId}}"
+                        suggestions="{{suggestions}}">
     </suggestion-service>
     <ul>
       <template id="suggestionsTemplate" repeat="{{suggestion in suggestions}}">
         <li>{{suggestion.name}} ({{suggestion.voters.length}})
-            <core-icon-button class="{{suggestion.thumbType}}" icon="{{suggestion.thumbType}}"
-                              title="{{suggestion.thumbType}}" on-tap="{{submitVote}}"
-                              data-suggestion="{{suggestion.id}}"></core-icon-button>
+            <template if="{{voteOpen}}">
+                <core-icon-button class="{{suggestion.thumbType}}"
+                                  icon="{{suggestion.thumbType}}"
+                                  title="{{suggestion.thumbType}}"
+                                  on-tap="{{submitVote}}"
+                                  data-suggestion="{{suggestion.id}}"></core-icon-button>
             </template>
         </li>
       </template>

@@ -14,20 +14,24 @@
         </style>
         <core-ajax id="ajax" method="POST"
                    url="http://localhost:9090/avatar"
-                   contentType="application/json"
                    on-core-response="{{succeeded}}"
                    on-core-error="{{errorOccurred}}"
                    handleAs="json">
         </core-ajax>
         <core-field>
-            <paper-input id="candidate" name="candidate" value="{{candidate}}"
-                         label="Candidate for new avatar" floatingLabel autofocus></paper-input>
+            <paper-input id="candidate" name="candidate"
+                         value="{{candidate}}"
+                         label="Candidate for new avatar"
+                         floatingLabel autofocus></paper-input>
         </core-field>
         <core-field>
-            <paper-input id="candidateEmail" name="candidateEmail" value="{{candidateEmail}}"
+            <paper-input id="candidateEmail" name="candidateEmail"
+                         value="{{candidateEmail}}"
                          type="email" error="Input is not an email!"
-                         label="Candidate email for new avatar" floatingLabel></paper-input>
-            <paper-fab icon="create" raisedButton on-tap="{{submitAvatar}}"></paper-fab>
+                         label="Candidate email for new avatar"
+                         floatingLabel></paper-input>
+            <paper-fab icon="create" raisedButton
+                       on-tap="{{submitAvatar}}"></paper-fab>
         </core-field>
     </template>
     <script>
