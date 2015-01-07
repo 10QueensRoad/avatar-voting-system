@@ -1,7 +1,6 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/core-ajax/core-ajax.html">
-<script type="text/javascript" src="/bower_components/sockjs/sockjs.js"></script>
-<script type="text/javascript" src="/bower_components/vertxbus/vertxbus.js"></script>
+<link rel="import" href="/bower_components/vertx-eventbus/vertx-eventbus.html">
 
 <polymer-element name="suggestion-service" attributes="message avatarId voterId suggestions">
   <template>
@@ -11,18 +10,50 @@
                on-core-error="{{errorOccurred}}"
                handleAs="json">
     </core-ajax>
+    <vertx-eventbus id="eventBus"
+                    auto
+                    url="http://localhost:9090/avatar/voting"
+                    registerHandlers="{{registerHandlers}}"
+                    reconnectIntervalSeconds="10"
+                    on-open="{{onOpen}}"
+                    on-close="{{onClose}}"
+                    on-error="{{onError}}">
+    </vertx-eventbus>
   </template>
   <script>
     Polymer({
+      self: null,
       ready: function () {
-        var self = this;
-        self.suggestions = [];
+        self = this;
+        this.suggestions = [];
 
-        var eb = new vertx.EventBus('http://localhost:9090/avatar/voting');
-        eb.onopen = function() {
-          eb.registerHandler('suggestion', function(suggested) {
-          var suggestion = JSON.parse(suggested);
-          suggestion.thumbType = suggestion.voters.indexOf(self.voterId) > -1;
+        this.$.ajaxList.params = JSON.stringify({avatarId: this.avatarId});
+        this.$.ajaxList.go();
+      },
+      onOpen: function() {
+        this.message = {
+            type: 'info',
+            text: 'Connected to the server',
+            timestamp: new Date().getTime()
+        }
+      },
+
+      onClose: function() {
+        this.message = {
+            type: 'error',
+            text: 'Disconnected from the server',
+            timestamp: new Date().getTime()
+        }
+      },
+
+      onError: function() {
+        console.log('called error event');
+      },
+
+      registerHandlers: [
+        {address: 'suggestion', handler: function(suggested) {
+            var suggestion = JSON.parse(suggested);
+            suggestion.thumbType = suggestion.voters.indexOf(this.voterId) > -1;
             self.suggestions.forEach(function(item) {
                 if (item.id === suggestion.id) {
                     suggestion.voted = item.voters.length < suggestion.voters.length;
@@ -45,12 +76,9 @@
                 text: msgText,
                 timestamp: new Date().getTime()
             }
-          });
-        };
+        }}
+      ],
 
-        this.$.ajaxList.params = JSON.stringify({avatarId: this.avatarId});
-        this.$.ajaxList.go();
-      },
       suggestionsLoaded: function () {
         this.suggestions = this.$.ajaxList.response.slice(0);
         this.suggestions.forEach(function(item) {

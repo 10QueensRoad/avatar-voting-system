@@ -19,6 +19,7 @@
     "paper-elements": "Polymer/paper-elements#~0.4.1",
     "app-router": "~1.0.0",
     "vertxbus": "*",
-    "sockjs": "~0.3.4"
+    "sockjs": "~0.3.4",
+    "vertx-eventbus": "*"
   }
 }
